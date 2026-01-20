@@ -5,11 +5,11 @@
 
 import { getTheme } from './themes.js';
 
-// Poster size presets (width x height in pixels for high-quality export)
+// Poster size presets (width x height in pixels for HD export - 4K resolution)
 export const POSTER_SIZES = {
-    portrait: { width: 3000, height: 4000, label: 'Portrait (3:4)' },
-    square: { width: 3000, height: 3000, label: 'Square (1:1)' },
-    landscape: { width: 4000, height: 3000, label: 'Landscape (4:3)' }
+    portrait: { width: 4000, height: 5333, label: 'Portrait (3:4)' },
+    square: { width: 4000, height: 4000, label: 'Square (1:1)' },
+    landscape: { width: 5333, height: 4000, label: 'Landscape (4:3)' }
 };
 
 // Road type to width mapping (relative scale)

@@ -1,84 +1,66 @@
-# 🗺️ Terraposter
+# Terraposter
 
-> **Maps, styled to belong on walls.**
+**Maps, styled to belong on walls.**
 
-Transform any city into a stunning, personalized map poster. Add your name, customize the text, and download print-ready artwork. Free forever.
-
----
-
-## ✨ Features
-
-- **🌍 Any City** - Search any location or use GPS
-- **✏️ Personalize** - Add custom title, subtitle, and your name
-- **🎨 17 Themes** - Noir, Cyberpunk, Japanese Ink, and more
-- **📐 3 Sizes** - Portrait, Square, Landscape
-- **🔍 Adjustable Radius** - 2km to 25km coverage
-- **📸 High Quality** - 3000×4000px print-ready PNG
-- **📤 Social Sharing** - Twitter, Instagram, Reddit, WhatsApp, Telegram
-- **💰 Free Forever** - No sign-up, no fees, runs in your browser
+Create personalized city map posters from any location worldwide. Add custom titles, subtitles, and your name. Download high-quality, print-ready artwork. Completely free, runs entirely in your browser.
 
 ---
 
-## 🚀 Try It
+## Live Demo
 
-**[Open Terraposter →](https://your-username.github.io/terraposter)**
+**https://sidshot.github.io/Terraposter**
 
 ---
 
-## 🏠 Local Development
+## Features
+
+- Search any city or use GPS location
+- Add custom title, subtitle, and name
+- 17 professionally designed themes
+- Portrait, square, and landscape formats
+- Adjustable map radius (2-25km)
+- High-definition PNG export (3000x4000px)
+- Share to Twitter, Instagram, Reddit, WhatsApp, Telegram
+- 100% client-side - no data stored, no server required
+
+---
+
+## Technology
+
+- HTML5 Canvas for rendering
+- OpenStreetMap data via Overpass API
+- Nominatim geocoding
+- Browser Geolocation API
+- Vanilla JavaScript (ES6 modules)
+
+---
+
+## Local Development
 
 ```bash
-# Clone
-git clone https://github.com/your-username/terraposter.git
-cd terraposter
-
-# Run
+git clone https://github.com/Sidshot/Terraposter.git
+cd Terraposter
 python -m http.server 8080
-# or: npx serve
 ```
 
 Open http://localhost:8080
 
 ---
 
-## 📁 Structure
+## Deployment
 
-```
-terraposter/
-├── index.html          # Main page
-├── logo.png            # Logo
-├── css/styles.css      # Styling
-├── js/
-│   ├── app.js          # App controller
-│   ├── themes.js       # 17 themes
-│   ├── data-fetcher.js # API calls
-│   └── map-renderer.js # Canvas rendering
-└── README.md
-```
+Hosted on GitHub Pages. Any push to `main` triggers automatic deployment.
 
 ---
 
-## 🚢 Deploy
+## Credits
 
-```bash
-git init
-git add .
-git commit -m "Initial commit"
-git remote add origin https://github.com/YOUR-USERNAME/terraposter.git
-git push -u origin main
-```
-
-Enable Pages: **Settings → Pages → Source: main**
+- Map data: OpenStreetMap contributors
+- Geocoding: Nominatim
+- Inspiration: originalankur/maptoposter
 
 ---
 
-## 🙏 Credits
-
-- [OpenStreetMap](https://www.openstreetmap.org/) - Map data
-- [originalankur/maptoposter](https://github.com/originalankur/maptoposter) - Inspiration
-
----
+## License
 
 MIT License
-
-

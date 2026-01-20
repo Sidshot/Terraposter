@@ -18,7 +18,7 @@ const state = {
     isLoading: false,
     isReady: false,
     lastBlob: null,
-    // Custom text options
+    // Custom text options (saved on "Apply")
     customText: {
         title: '',
         subtitle: '',
@@ -45,6 +45,7 @@ const elements = {
     customTitle: document.getElementById('customTitle'),
     customSubtitle: document.getElementById('customSubtitle'),
     customName: document.getElementById('customName'),
+    applyTextBtn: document.getElementById('applyTextBtn'),
     // Share buttons
     shareTwitter: document.getElementById('shareTwitter'),
     shareInstagram: document.getElementById('shareInstagram'),
@@ -59,7 +60,7 @@ const elements = {
  * Initialize the application
  */
 async function init() {
-    console.log('🗺️ Terraposter initialized');
+    console.log('Terraposter initialized');
 
     // Populate theme grid
     populateThemes();
@@ -107,10 +108,8 @@ function setupEventListeners() {
         if (e.key === 'Enter') handleSearch();
     });
 
-    // Custom text inputs
-    elements.customTitle.addEventListener('input', handleCustomTextChange);
-    elements.customSubtitle.addEventListener('input', handleCustomTextChange);
-    elements.customName.addEventListener('input', handleCustomTextChange);
+    // Apply text changes button
+    elements.applyTextBtn.addEventListener('click', handleApplyText);
 
     // Theme selection
     elements.themeGrid.addEventListener('click', (e) => {
@@ -147,28 +146,23 @@ function setupEventListeners() {
 }
 
 /**
- * Handle custom text input changes
+ * Handle "Apply Changes" button click - saves custom text and re-renders
  */
-function handleCustomTextChange() {
+function handleApplyText() {
     state.customText = {
         title: elements.customTitle.value.trim(),
         subtitle: elements.customSubtitle.value.trim(),
         name: elements.customName.value.trim()
     };
 
-    // Re-render if ready (debounced)
-    if (state.isReady) {
-        debounceRender();
-    }
-}
+    state.lastBlob = null; // Clear cached blob since text changed
 
-// Debounce timer for text input
-let renderTimeout = null;
-function debounceRender() {
-    clearTimeout(renderTimeout);
-    renderTimeout = setTimeout(() => {
+    if (state.isReady) {
+        showToast('Changes applied!');
         renderMap();
-    }, 300);
+    } else {
+        showToast('Enter a location first, then apply changes');
+    }
 }
 
 /**
@@ -299,6 +293,7 @@ async function renderMap() {
  */
 function selectTheme(themeName) {
     state.selectedTheme = themeName;
+    state.lastBlob = null; // Clear cached blob
 
     // Update UI
     document.querySelectorAll('.theme-btn').forEach(btn => {
@@ -316,6 +311,7 @@ function selectTheme(themeName) {
  */
 function selectSize(sizeName) {
     state.selectedSize = sizeName;
+    state.lastBlob = null; // Clear cached blob
 
     // Update UI
     document.querySelectorAll('.size-btn').forEach(btn => {
@@ -346,6 +342,7 @@ function handleRadiusChange(e) {
  */
 async function handleRadiusChangeComplete(e) {
     if (state.currentLocation) {
+        state.lastBlob = null; // Clear cached blob
         await loadMapData();
     }
 }
@@ -356,7 +353,7 @@ async function handleRadiusChangeComplete(e) {
 async function handleDownload() {
     if (!state.mapData || !state.locationInfo) return;
 
-    showLoading('Generating high-quality poster...');
+    showLoading('Generating HD poster...');
     elements.downloadBtn.disabled = true;
 
     try {
@@ -383,7 +380,7 @@ async function handleDownload() {
         await downloadPoster(exportCanvas, name, state.selectedTheme);
 
         hideLoading();
-        showToast('Poster downloaded!');
+        showToast('HD poster downloaded!');
 
     } catch (error) {
         console.error('Download error:', error);
@@ -411,8 +408,8 @@ function enableButtons(enabled) {
  */
 function shareToTwitter() {
     const name = state.customText.title || `${state.locationInfo.city}, ${state.locationInfo.country}`;
-    const text = encodeURIComponent(`Check out my ${name} map poster! 🗺️ Created with Terraposter - Maps, styled to belong on walls.`);
-    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent(`Check out my ${name} map poster! Created with Terraposter`);
+    const url = encodeURIComponent('https://sidshot.github.io/Terraposter');
     window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank', 'width=600,height=400');
 }
 
@@ -430,7 +427,7 @@ async function shareToInstagram() {
 function shareToReddit() {
     const name = state.customText.title || `${state.locationInfo.city}, ${state.locationInfo.country}`;
     const title = encodeURIComponent(`${name} map poster - Created with Terraposter`);
-    const url = encodeURIComponent(window.location.href);
+    const url = encodeURIComponent('https://sidshot.github.io/Terraposter');
     window.open(`https://www.reddit.com/submit?title=${title}&url=${url}`, '_blank');
 }
 
@@ -439,7 +436,7 @@ function shareToReddit() {
  */
 function shareToWhatsApp() {
     const name = state.customText.title || `${state.locationInfo.city}, ${state.locationInfo.country}`;
-    const text = encodeURIComponent(`Check out my ${name} map poster! 🗺️\n\nCreate yours free: ${window.location.href}`);
+    const text = encodeURIComponent(`Check out my ${name} map poster!\n\nCreate yours free: https://sidshot.github.io/Terraposter`);
     window.open(`https://wa.me/?text=${text}`, '_blank');
 }
 
@@ -448,8 +445,8 @@ function shareToWhatsApp() {
  */
 function shareToTelegram() {
     const name = state.customText.title || `${state.locationInfo.city}, ${state.locationInfo.country}`;
-    const text = encodeURIComponent(`Check out my ${name} map poster! 🗺️`);
-    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent(`Check out my ${name} map poster!`);
+    const url = encodeURIComponent('https://sidshot.github.io/Terraposter');
     window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank');
 }
 
@@ -460,7 +457,7 @@ async function copyImageToClipboard() {
     try {
         // Generate full-size image if needed
         if (!state.lastBlob) {
-            showLoading('Preparing image...');
+            showLoading('Preparing HD image...');
 
             const exportCanvas = document.createElement('canvas');
             await renderPoster(
@@ -484,7 +481,7 @@ async function copyImageToClipboard() {
                     'image/png': state.lastBlob
                 })
             ]);
-            showToast('Image copied to clipboard!');
+            showToast('HD image copied to clipboard!');
         } else {
             showToast('Clipboard not supported. Downloading instead...');
             handleDownload();
@@ -501,7 +498,7 @@ async function copyImageToClipboard() {
 function updateLocationDisplay() {
     if (state.locationInfo) {
         const { city, country } = state.locationInfo;
-        elements.locationInfo.textContent = `📍 ${city}, ${country}`;
+        elements.locationInfo.textContent = `${city}, ${country}`;
         elements.citySearch.value = `${city}, ${country}`;
     }
 }
